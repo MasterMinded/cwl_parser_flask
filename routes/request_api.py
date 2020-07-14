@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime, timedelta
 from flask import jsonify, abort, request, Blueprint
-
-from validate_email import validate_email
+import os
+from cwlparser import CwlParser
 REQUEST_API = Blueprint('request_api', __name__)
 
 
@@ -19,10 +18,24 @@ def send_metadata():
     """Return file metadata
     """
 
-    # if not request.get_json():
-    #     abort(400)
+    if not request.files['file']:
+        abort(400)
 
-    workflow_file = request.files['file']
-    data = request.get_json(force=True)
-    return jsonify(data), 200
+    cwl_file = request.files['file']
+    # save the cwl file
+    currentdir = os.getcwd()
+    file_loc = os.path.join(currentdir, "temp_inputs", cwl_file.filename)
+    cwl_file.save(file_loc)
+
+    # parse the file
+    parser = CwlParser(file_loc)
+
+    # set output
+    metadata = {'tasks': parser.tasks, 'dependencies': parser.dependencies}
+
+    # clear input
+    os.remove(file_loc)
+
+    # TODO: handle error codes
+    return jsonify(metadata), 200
 
