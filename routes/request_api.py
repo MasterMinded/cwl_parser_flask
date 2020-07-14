@@ -15,12 +15,14 @@ def get_blueprint():
 
 
 @REQUEST_API.route('/send_file', methods=['POST'])
-def get_records():
+def send_metadata():
     """Return file metadata
     """
 
-    if not request.get_json():
-        abort(400)
+    # if not request.get_json():
+    #     abort(400)
+
+    workflow_file = request.files['file']
     data = request.get_json(force=True)
     return jsonify(data), 200
 
