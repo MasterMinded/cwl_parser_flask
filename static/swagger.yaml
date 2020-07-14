@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  description: API for parsing files
+  version: "1.0.0"
+  title: Parsers API
+paths:
+  /send_file:
+    post:
+      summary: send a file to parse
+      operationId: parseFile
+      description: Parse a file in order to extract metadata, that can be used by a planning algorithm.
+      responses:
+        '200':
+          description: MetaData sucessfully generated
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+
+
+# Added by API Auto Mocking Plugin
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/MasterMinded/Parsersv2/1.0.0
