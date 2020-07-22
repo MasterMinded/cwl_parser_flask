@@ -32,7 +32,12 @@ class CwlParser:
         if '/' in index:
             res = index.split('/')
             if res[0] in self.tasks:
-                self.dependencies[res[0]] = task
+                if res[0] in self.dependencies:
+                    value = self.dependencies[res[0]]
+                    value.append(task)
+                    self.dependencies[res[0]] = value
+                else:
+                    self.dependencies[res[0]] = [task]
 
     def extract_data(self):
         """Extract tasks, dependencies and weights """
